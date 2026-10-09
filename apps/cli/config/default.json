@@ -1,0 +1,7 @@
+{
+  "from": "Your Name <you@gmail.com>",
+  "subject": "Job Application",
+  "resume": "./assets/resume.pdf",
+  "delayMs": 5000,
+  "dailyLimit": 450
+}

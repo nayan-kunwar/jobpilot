@@ -1,0 +1,26 @@
+{
+  "name": "@apps/web",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Web app (Next.js) — empty scaffold, UI comes later",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint .",
+    "check": "tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "next": "^15.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "19.3.0"
+  }
+}

@@ -1,0 +1,42 @@
+# secrets (never commit — per app)
+apps/*/credentials.json
+apps/*/token.json
+credentials.json
+token.json
+.env
+apps/*/.env
+
+# local CLI config override (tracked example: apps/cli/config/default.json)
+apps/cli/config.json
+
+# local data / outputs (cli app)
+apps/cli/logs/*
+!apps/cli/logs/.gitkeep
+apps/cli/sent_log.csv
+sent_log.csv
+apps/cli/emails.txt
+apps/cli/data/emails.txt
+emails.txt
+!apps/cli/data/emails.example.txt
+
+# attachments (resume lives in apps/cli/assets/, ignored by default)
+*.pdf
+!apps/cli/assets/.gitkeep
+
+# deps / build / cache
+node_modules/
+apps/*/node_modules/
+dist/
+apps/*/dist/
+coverage/
+.nx/
+.next/
+apps/*/.next/
+out/
+pnpm-lock.yaml
+apps/*/pnpm-lock.yaml
+
+.DS_Store
+*.tsbuildinfo
+apps/*/next-env.d.ts
+next-env.d.ts

@@ -1,0 +1,5 @@
+# One address per line works, but any format is fine —
+# the sender extracts emails with a regex and dedupes them.
+# Lines like these are all parsed:
+hiring@example.com
+Jane Doe <jane@company.com>, careers@company.com; jobs@company.com

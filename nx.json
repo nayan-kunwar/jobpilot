@@ -1,0 +1,21 @@
+{
+  "$schema": "./node_modules/nx/schemas/nx-schema.json",
+  "defaultBase": "main",
+  "targetDefaults": {
+    "build": { "dependsOn": ["^build"], "cache": true },
+    "test": { "cache": true },
+    "lint": { "cache": true },
+    "check": { "cache": true },
+    "dry": { "cache": false },
+    "live": { "cache": false },
+    "send": { "cache": false },
+    "auth": { "cache": false },
+    "setup": { "cache": false },
+    "dev": { "cache": false }
+  },
+  "namedInputs": {
+    "default": ["{projectRoot}/**/*", "sharedGlobals"],
+    "sharedGlobals": ["{workspaceRoot}/tsconfig.base.json", "{workspaceRoot}/eslint.config.js"]
+  },
+  "plugins": []
+}

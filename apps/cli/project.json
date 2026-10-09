@@ -1,0 +1,22 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "name": "@apps/cli",
+  "sourceRoot": "apps/cli/src",
+  "projectType": "application",
+  "targets": {
+    "dry": { "executor": "nx:run-script", "options": { "script": "dry" } },
+    "live": { "executor": "nx:run-script", "options": { "script": "live" } },
+    "send": { "executor": "nx:run-script", "options": { "script": "send" } },
+    "auth": { "executor": "nx:run-script", "options": { "script": "auth" } },
+    "setup": { "executor": "nx:run-script", "options": { "script": "setup" } },
+    "test": { "executor": "nx:run-script", "options": { "script": "test" }, "cache": true },
+    "lint": { "executor": "nx:run-script", "options": { "script": "lint" }, "cache": true },
+    "check": { "executor": "nx:run-script", "options": { "script": "check" }, "cache": true },
+    "build": {
+      "executor": "nx:run-script",
+      "options": { "script": "build" },
+      "cache": true,
+      "outputs": ["{projectRoot}/dist"]
+    }
+  }
+}

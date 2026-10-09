@@ -1,0 +1,35 @@
+{
+  "name": "job-apps",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Monorepo: job-application tooling (CLI bulk sender, future web apps)",
+  "license": "MIT",
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "workspaces": ["apps/*", "packages/*"],
+  "scripts": {
+    "dry": "nx run @apps/cli:dry",
+    "live": "nx run @apps/cli:live",
+    "send": "nx run @apps/cli:send",
+    "auth": "nx run @apps/cli:auth",
+    "setup": "nx run @apps/cli:setup",
+    "test": "nx run-many -t test",
+    "lint": "nx run-many -t lint",
+    "check": "nx run-many -t check",
+    "build": "nx run-many -t build",
+    "format": "prettier --write .",
+    "graph": "nx graph"
+  },
+  "devDependencies": {
+    "@nx/js": "^21.0.0",
+    "@nx/node": "^21.0.0",
+    "@types/node": "^22.0.0",
+    "eslint": "^9.39.5",
+    "nx": "^21.0.0",
+    "prettier": "^3.9.9",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0",
+    "typescript-eslint": "^8.0.0",
+    "vitest": "^3.0.0"
+  }
+}

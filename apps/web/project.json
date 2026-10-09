@@ -1,0 +1,18 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "name": "@apps/web",
+  "sourceRoot": "apps/web",
+  "projectType": "application",
+  "targets": {
+    "dev": { "executor": "nx:run-script", "options": { "script": "dev" } },
+    "build": {
+      "executor": "nx:run-script",
+      "options": { "script": "build" },
+      "cache": true,
+      "outputs": ["{projectRoot}/.next"]
+    },
+    "start": { "executor": "nx:run-script", "options": { "script": "start" } },
+    "lint": { "executor": "nx:run-script", "options": { "script": "lint" }, "cache": true },
+    "check": { "executor": "nx:run-script", "options": { "script": "check" }, "cache": true }
+  }
+}
