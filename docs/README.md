@@ -4,17 +4,18 @@ Usage and contributor documentation for the **job-apps** monorepo.
 
 ## I want to…
 
-| Goal                                           | Start here                                  |
-| ---------------------------------------------- | ------------------------------------------- |
-| Send my first batch of emails                  | [Getting started](./getting-started.md)     |
-| Set up Google Cloud + Gmail login (first time) | [Gmail setup](./gmail-setup.md)             |
-| Learn every command and flag                   | [CLI usage](./cli-usage.md)                 |
-| Change subject / resume / delays               | [Configuration](./configuration.md)         |
-| Understand sending limits and the audit log    | [Safety and limits](./safety-and-limits.md) |
-| Fix an error                                   | [Troubleshooting](./troubleshooting.md)     |
-| Contribute code (tests, lint, conventions)     | [Development](./development.md)             |
-| Add a new app or shared package                | [Monorepo](./monorepo.md)                   |
-| Work on the web UI                             | [Web](./web.md)                             |
+| Goal                                           | Start here                                    |
+| ---------------------------------------------- | --------------------------------------------- |
+| Send my first batch of emails                  | [Getting started](./getting-started.md)       |
+| Set up Google Cloud + Gmail login (first time) | [Gmail setup](./gmail-setup.md)               |
+| Learn every command and flag                   | [CLI usage](./cli-usage.md)                   |
+| Trace one invocation through commander         | [Commander workflow](./commander-workflow.md) |
+| Change subject / resume / delays               | [Configuration](./configuration.md)           |
+| Understand sending limits and the audit log    | [Safety and limits](./safety-and-limits.md)   |
+| Fix an error                                   | [Troubleshooting](./troubleshooting.md)       |
+| Contribute code (tests, lint, conventions)     | [Development](./development.md)               |
+| Add a new app or shared package                | [Monorepo](./monorepo.md)                     |
+| Work on the web UI                             | [Web](./web.md)                               |
 
 ## Repo map (one-liners)
 

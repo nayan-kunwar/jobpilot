@@ -15,11 +15,9 @@
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
-    "baseUrl": ".",
     "paths": {
-      "@apps/cli/*": ["apps/cli/src/*"],
-      "@apps/web/*": ["apps/web/*"]
-    },
-    "types": ["node"]
+      "@apps/cli/*": ["./apps/cli/src/*"],
+      "@apps/web/*": ["./apps/web/*"]
+    }
   }
 }

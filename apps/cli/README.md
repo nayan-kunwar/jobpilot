@@ -2,7 +2,7 @@
 
 Send personalized job-application emails with PDF resume via the Gmail API. Commander-based CLI, TypeScript, run via Nx from the workspace root.
 
-> Details: [`docs/cli-usage.md`](../../docs/cli-usage.md) · [`docs/configuration.md`](../../docs/configuration.md) · [`docs/troubleshooting.md`](../../docs/troubleshooting.md)
+> Details: [`docs/cli-usage.md`](../../docs/cli-usage.md) · [`docs/commander-workflow.md`](../../docs/commander-workflow.md) · [`docs/configuration.md`](../../docs/configuration.md) · [`docs/troubleshooting.md`](../../docs/troubleshooting.md)
 
 ## Usage (from repo root)
 
