@@ -10,22 +10,44 @@ export interface ConfirmPrompter {
   askConfirm(message: string): Promise<boolean>;
 }
 
+/**
+ * Windows Nx launches scripts via child_process.exec and never forwards stdin.
+ * Clack only hears Enter after setRawMode, which it skips when stdin is not a TTY,
+ * so the Yes/No box paints and then ignores the keyboard. Fail closed instead.
+ */
+export const NO_KEYBOARD =
+  'Cannot read Yes/No: this process has no terminal keyboard, so Enter never arrives.\n' +
+  'On Windows, `nx run` starts the CLI with child_process.exec and does not forward stdin.\n' +
+  'From the repo root use `npm run send` (or `npm run live`). Nothing was sent.';
+
+/** Clack confirm when stdin is a real TTY; otherwise decline without waiting. */
+export async function readConfirm(
+  message: string,
+  stdinIsTTY: boolean | undefined,
+  ask: (message: string) => Promise<unknown> = (m) => p.confirm({ message: m }),
+): Promise<boolean> {
+  if (stdinIsTTY !== true) {
+    console.error(NO_KEYBOARD);
+    return false;
+  }
+  const answer = await ask(message);
+  return answer === true; // Ctrl+C cancel counts as decline
+}
+
 export const clackPrompter: ConfirmPrompter = {
   intro: (title = 'gmail-bulk-sender') => p.intro(title),
   note: (message, title) => p.note(message, title),
   outro: (message = '') => p.outro(message),
-  askConfirm: async (message: string) => {
-    const answer = await p.confirm({ message });
-    return answer === true; // Ctrl+C cancel counts as decline
-  },
+  askConfirm: (message) => readConfirm(message, process.stdin.isTTY),
 };
 
-/** Prompt only for live sends with a human present. Everything else skips. */
+/** Prompt only for live sends. --yes / --dry-run / non-TTY skip, unless --interactive forces it. */
 export function shouldPrompt(
-  opts: { dryRun: boolean; yes: boolean },
+  opts: { dryRun: boolean; yes: boolean; interactive: boolean },
   stdinIsTTY: boolean | undefined,
 ): boolean {
-  return !opts.dryRun && !opts.yes && stdinIsTTY === true;
+  if (opts.dryRun || opts.yes) return false;
+  return stdinIsTTY === true || opts.interactive;
 }
 
 export interface RecipientPreview {

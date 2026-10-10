@@ -48,8 +48,8 @@ sender.ts:28  run(opts)          ← EXECUTE (never sees argv)
 | `.option('--limit <n>', …, parser)` | value option (`<n>` = value required); 3rd arg coerces/validates |
 | `.option('--config <path>', …, D)`  | value option with a default                                      |
 
-Ten options total: `--dry-run --yes --non-interactive --quiet --json --limit
---subject --from --resume --body-file --delay-ms --daily-limit --config`.
+Fourteen options total: `--dry-run --yes --non-interactive --interactive --quiet --json
+--limit --subject --from --resume --body-file --delay-ms --daily-limit --config`.
 Adding another = one `.option()` line +
 a `CliOptions` field (checklist in [Development](./development.md)).
 
@@ -137,8 +137,10 @@ if (shouldPrompt(opts, process.stdin.isTTY)) {
 }
 ```
 
-- `shouldPrompt` (`tui.ts`) is pure: true only for live sends (`!dryRun`),
-  without `--yes`, on a TTY. Scripts, CI, and pipes skip it by construction.
+- `shouldPrompt` (`tui.ts`) is pure: true for live sends (`!dryRun`) without
+  `--yes`, when stdin is a TTY or `--interactive` is set. Scripts, CI, and pipes
+  skip it. If `--interactive` forces a prompt but stdin is not a TTY, `readConfirm`
+  declines immediately — clack cannot see Enter unless raw mode is on.
 - `confirmSend` previews the first 5 addresses + subject + list path via clack,
   returns the answer. Decline → exit 0, nothing sent or logged.
 - Unreadable list → returns true without asking, so `sender.ts` reports the

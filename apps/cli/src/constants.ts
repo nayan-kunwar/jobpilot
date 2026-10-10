@@ -16,6 +16,7 @@ export interface CliOptions {
   listFile: string;
   dryRun: boolean;
   yes: boolean;
+  interactive: boolean;
   quiet: boolean;
   json: boolean;
   limit: number | null;

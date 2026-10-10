@@ -1,8 +1,15 @@
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
-import { confirmSend, previewRecipients, shouldPrompt, type ConfirmPrompter } from '../src/tui.js';
+import {
+  confirmSend,
+  NO_KEYBOARD,
+  previewRecipients,
+  readConfirm,
+  shouldPrompt,
+  type ConfirmPrompter,
+} from '../src/tui.js';
 
 function fakePrompter(answer: boolean): ConfirmPrompter & { calls: string[] } {
   const calls: string[] = [];
@@ -34,11 +41,39 @@ async function makeList(content: string): Promise<string> {
 
 describe('shouldPrompt', () => {
   it('prompts only for live TTY sends without --yes', () => {
-    expect(shouldPrompt({ dryRun: false, yes: false }, true)).toBe(true);
-    expect(shouldPrompt({ dryRun: true, yes: false }, true)).toBe(false);
-    expect(shouldPrompt({ dryRun: false, yes: true }, true)).toBe(false);
-    expect(shouldPrompt({ dryRun: false, yes: false }, false)).toBe(false);
-    expect(shouldPrompt({ dryRun: false, yes: false }, undefined)).toBe(false);
+    expect(shouldPrompt({ dryRun: false, yes: false, interactive: false }, true)).toBe(true);
+    expect(shouldPrompt({ dryRun: true, yes: false, interactive: false }, true)).toBe(false);
+    expect(shouldPrompt({ dryRun: false, yes: true, interactive: false }, true)).toBe(false);
+    expect(shouldPrompt({ dryRun: false, yes: false, interactive: false }, false)).toBe(false);
+    expect(shouldPrompt({ dryRun: false, yes: false, interactive: false }, undefined)).toBe(false);
+  });
+
+  it('--interactive forces the prompt even when TTY is not detected (Nx-safe)', () => {
+    expect(shouldPrompt({ dryRun: false, yes: false, interactive: true }, false)).toBe(true);
+    expect(shouldPrompt({ dryRun: false, yes: false, interactive: true }, undefined)).toBe(true);
+  });
+
+  it('--yes still wins over --interactive, dry-run never prompts', () => {
+    expect(shouldPrompt({ dryRun: false, yes: true, interactive: true }, true)).toBe(false);
+    expect(shouldPrompt({ dryRun: true, yes: false, interactive: true }, true)).toBe(false);
+  });
+});
+
+describe('readConfirm', () => {
+  it('declines immediately when stdin is not a TTY and does not ask', async () => {
+    const ask = vi.fn(async () => true);
+    const spy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    await expect(readConfirm('Send?', false, ask)).resolves.toBe(false);
+    await expect(readConfirm('Send?', undefined, ask)).resolves.toBe(false);
+    expect(ask).not.toHaveBeenCalled();
+    expect(spy).toHaveBeenCalledWith(NO_KEYBOARD);
+    spy.mockRestore();
+  });
+
+  it('uses the answer only when stdin is a TTY', async () => {
+    await expect(readConfirm('Send?', true, async () => true)).resolves.toBe(true);
+    await expect(readConfirm('Send?', true, async () => false)).resolves.toBe(false);
+    await expect(readConfirm('Send?', true, async () => Symbol('cancel'))).resolves.toBe(false);
   });
 });
 

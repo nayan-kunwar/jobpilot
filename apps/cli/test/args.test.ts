@@ -32,6 +32,13 @@ describe('parseArgs', () => {
   it('parses --yes', async () => {
     const o = await parseArgs(['node', 'send', '--yes']);
     expect(o.yes).toBe(true);
+    expect(o.interactive).toBe(false);
+  });
+
+  it('parses --interactive', async () => {
+    const o = await parseArgs(['node', 'send', '--interactive']);
+    expect(o.interactive).toBe(true);
+    expect(o.yes).toBe(false);
   });
 
   it('maps --non-interactive to yes and parses --quiet/--json', async () => {

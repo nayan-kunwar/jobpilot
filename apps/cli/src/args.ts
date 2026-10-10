@@ -21,6 +21,10 @@ export function buildProgram(): Command {
     .option('--dry-run', 'list what would be sent without sending')
     .option('--yes', 'skip interactive confirmation prompts (for scripts/CI)')
     .option('--non-interactive', 'same as --yes')
+    .option(
+      '--interactive',
+      'ask for confirmation even when TTY is not detected (aborts if the keyboard is not connected)',
+    )
     .option('--quiet', 'errors and final summary only (no per-address lines)')
     .option('--json', 'print a machine-readable JSON summary at the end (implies --quiet)')
     .option('--limit <n>', 'cap this run to N addresses', positiveIntParser('--limit'))
@@ -64,6 +68,7 @@ export async function parseArgs(argv: string[] = process.argv): Promise<CliOptio
     dryRun?: boolean;
     yes?: boolean;
     nonInteractive?: boolean;
+    interactive?: boolean;
     quiet?: boolean;
     json?: boolean;
     limit?: number;
@@ -92,6 +97,7 @@ export async function parseArgs(argv: string[] = process.argv): Promise<CliOptio
     listFile,
     dryRun: opts.dryRun ?? false,
     yes: opts.yes ?? opts.nonInteractive ?? false,
+    interactive: opts.interactive ?? false,
     quiet: opts.quiet ?? false,
     json: opts.json ?? false,
     limit: opts.limit ?? null,

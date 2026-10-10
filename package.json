@@ -9,8 +9,8 @@
   "workspaces": ["apps/*", "packages/*"],
   "scripts": {
     "dry": "nx run @apps/cli:dry",
-    "live": "nx run @apps/cli:live",
-    "send": "nx run @apps/cli:send",
+    "live": "npm run live -w @apps/cli --",
+    "send": "npm run send -w @apps/cli --",
     "auth": "nx run @apps/cli:auth",
     "setup": "nx run @apps/cli:setup",
     "test": "nx run-many -t test",

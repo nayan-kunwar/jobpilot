@@ -19,7 +19,15 @@ Live sends from a human terminal show a preview (first 5 addresses + subject +
 list path) and ask `Send to N address(es)?` before anything goes out. Declining
 aborts with `Aborted — nothing sent` (exit 0, nothing sent, nothing logged).
 Prompting is skipped automatically for `--dry-run`, `--yes`, and non-TTY
-(pipes/CI) — automation never hangs waiting for input.
+(pipes/CI) — automation never hangs waiting for input. `--yes` still wins if
+`--interactive` is also passed.
+
+`npm run send` and `npm run live` start the CLI in this terminal, so arrow keys
+and Enter reach the Yes/No prompt. `npx nx run @apps/cli:send` on Windows does
+not: Nx uses `child_process.exec` and drops stdin, so the prompt is drawn and
+Enter does nothing. Use `npm run send`, or `--yes` for an unattended run.
+`--interactive` still asks when a TTY is not detected; if the keyboard is not
+actually connected, the CLI prints why and sends nothing.
 
 ## Passing flags
 
@@ -39,7 +47,7 @@ npm run send -- data/other.txt --dry-run
 npm run send -- --resume assets/resume-v2.pdf --body-file cover.txt --dry-run
 ```
 
-Raw Nx equivalents (identical behavior):
+Raw Nx equivalents (`send` on Windows cannot read the Yes/No keys; use `npm run send`):
 
 ```
 npx nx run @apps/cli:dry
@@ -65,6 +73,7 @@ gmail-bulk-sender [options] [listFile]
 | `[listFile]`         | address list file (any format — emails are regex-extracted, lowercased, deduped) | `apps/cli/data/emails.txt`          |
 | `--dry-run`          | print effective config + addresses, send nothing, skip Gmail auth                | off                                 |
 | `--yes`              | skip interactive confirmation (for scripts/CI; implied by non-TTY)               | off                                 |
+| `--interactive`      | ask for confirmation even when TTY is not detected (aborts if no keyboard)       | off                                 |
 | `--non-interactive`  | same as `--yes`                                                                  | off                                 |
 | `--quiet`            | errors and final summary only (no per-address lines)                             | off                                 |
 | `--json`             | machine-readable JSON summary on stdout (implies `--quiet`)                      | off                                 |
