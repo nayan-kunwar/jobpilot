@@ -47,7 +47,7 @@ npm run auth
 
 ```
 npx nx run @apps/cli:dry              # = npm run dry
-npx nx run @apps/cli:send -- --limit 50 --subject "..."
+npx nx run @apps/cli:send -- --limit 50 --dry-run
 npx nx run @apps/cli:auth
 npx nx run-many -t test               # all tests
 npx nx run-many -t lint check         # all lints + typechecks

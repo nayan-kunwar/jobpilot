@@ -51,7 +51,7 @@ Raw Nx equivalents (`send` on Windows cannot read the Yes/No keys; use `npm run 
 
 ```
 npx nx run @apps/cli:dry
-npx nx run @apps/cli:send -- --limit 50 --subject "..."
+npx nx run @apps/cli:send -- --limit 50 --dry-run
 npx nx run @apps/cli:auth
 ```
 
