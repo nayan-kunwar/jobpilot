@@ -15,8 +15,19 @@ npx nx graph                   # visual project graph
 ```
 
 Per-app: `npx nx run @apps/cli:<target>` / `npx nx run @apps/web:<target>`
-(see `apps/*/project.json` for target lists). Send/auth/dry/live targets are
+(see `apps/*/project.json` for target lists). Send/auth/dry/live/setup targets are
 never Nx-cached; test/lint/check/build are.
+
+## CI (`.github/workflows/ci.yml`)
+
+Push/PR runs `npm ci` + `nx run-many -t test lint check build` + `npm run setup`
+
+- a `--limit 5` dry-run smoke test — all hermetic, zero secrets. Live sends never
+  run in CI; the workflow file carries a commented manual-dispatch recipe (secrets
+  via `GMAIL_CREDENTIALS_JSON` / `GMAIL_TOKEN_JSON` env vars or mounted files).
+  Automation rules enforced in code: `--yes`/`--non-interactive` or non-TTY skips
+  prompts; `--quiet`/`--json` for machine output; missing values fail closed
+  (non-zero exit) instead of hanging.
 
 ## Conventions
 

@@ -19,6 +19,11 @@ apps/cli/data/emails.txt
 emails.txt
 !apps/cli/data/emails.example.txt
 
+# local cover letters (may contain name/phone/links — use --body-file with your own)
+apps/cli/cover*.txt
+cover*.txt
+!apps/cli/cover.example.txt
+
 # attachments (resume lives in apps/cli/assets/, ignored by default)
 *.pdf
 !apps/cli/assets/.gitkeep

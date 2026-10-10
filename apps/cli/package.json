@@ -4,8 +4,12 @@
   "description": "Send personalized job-application emails with PDF resume via the Gmail API",
   "license": "MIT",
   "type": "module",
-  "engines": { "node": ">=20" },
-  "bin": { "gmail-bulk-sender": "./bin/send.ts" },
+  "engines": {
+    "node": ">=20"
+  },
+  "bin": {
+    "gmail-bulk-sender": "./bin/send.ts"
+  },
   "scripts": {
     "dry": "tsx ./bin/send.ts --dry-run",
     "live": "tsx ./bin/send.ts",
@@ -20,6 +24,7 @@
     "format": "prettier --write ."
   },
   "dependencies": {
+    "@clack/prompts": "^1.8.1",
     "@google-cloud/local-auth": "^3.0.1",
     "commander": "^14.0.0",
     "googleapis": "^144.0.0"

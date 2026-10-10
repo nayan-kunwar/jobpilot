@@ -14,7 +14,14 @@ click Enable, wait 1–2 minutes, retry. (Setup: [Gmail setup](./gmail-setup.md#
 Re-download it per [Gmail setup step 3](./gmail-setup.md#3-create-the-oauth-client).
 
 **`cannot read token.json ... Re-run "npm run auth"`**
-→ No login yet (or the file was deleted). Run `npm run auth`.
+→ No login yet (or the file was deleted). Run `npm run auth`. In CI, inject
+`GMAIL_CREDENTIALS_JSON` / `GMAIL_TOKEN_JSON` env vars instead of files
+(see [Development](./development.md#ci-githubworkflowsciyml)).
+
+**`cannot parse GMAIL_CREDENTIALS_JSON / GMAIL_TOKEN_JSON`**
+→ the env var isn't valid JSON. Re-copy the full file contents (e.g.
+`export GMAIL_TOKEN_JSON="$(cat apps/cli/token.json)"`); watch for shell
+mangling of quotes on Windows `cmd.exe` — prefer files locally, env only in CI.
 
 **`token.json has no refresh_token ...` / `access token expired and no refresh_token present`**
 → Re-run `npm run auth`. (Caused by approving with an already-logged-in session
@@ -57,6 +64,13 @@ already went out before re-running.
 **`Unknown flag: --bogus` / `Unexpected argument` / `--limit must be a positive integer`**
 → typo or bad value; `npx tsx apps/cli/bin/send.ts --help` lists everything.
 Note numeric flags accept `--limit 5` and `--limit=5` forms.
+
+**`too many arguments. Expected 1 argument but got N`**
+→ an unquoted multi-word value split into positionals (classic: `--subject Job
+Application` without quotes). The CLI now prints a `Did you forget quotes?` hint.
+Fix: quote it (`--subject "Job Application"`), or — safer through Nx, which strips
+quotes when forwarding — put multi-word text in `apps/cli/config.json` instead.
+See [CLI usage](./cli-usage.md#passing-flags).
 
 ## Still stuck?
 

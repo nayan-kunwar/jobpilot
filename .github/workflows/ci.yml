@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+      - run: npm ci
+      - run: npx nx run-many -t test lint check build
+      # Safe smoke test: dry-run needs no Gmail credentials and sends nothing.
+      - run: npm run setup
+      - run: npm run dry -- --limit 5
+
+  # Live sends never run in CI. To send from automation, create a separate
+  # manual workflow (workflow_dispatch) that writes secrets to files first:
+  #
+  #   - run: |
+  #       printf '%s' '${{ secrets.GMAIL_CREDENTIALS_JSON }}' > apps/cli/credentials.json
+  #       printf '%s' '${{ secrets.GMAIL_TOKEN_JSON }}' > apps/cli/token.json
+  #       cp your-list.txt apps/cli/data/emails.txt
+  #       npm run live -- --yes
+  #
+  # or inject without files:
+  #
+  #   env:
+  #     GMAIL_CREDENTIALS_JSON: ${{ secrets.GMAIL_CREDENTIALS_JSON }}
+  #     GMAIL_TOKEN_JSON: ${{ secrets.GMAIL_TOKEN_JSON }}
+  #   run: npm run live -- --yes

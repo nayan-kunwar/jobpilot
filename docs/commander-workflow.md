@@ -10,17 +10,18 @@ return; plain TypeScript owns everything right of it.
 shell:  npm run dry -- --limit 5
   │  root package.json "dry" → nx run @apps/cli:dry
   ▼
-bin/send.ts:1-3 ── imports ──▶ src/index.ts:6
-  │  await run(await parseArgs(process.argv))
+bin/send.ts:1-3 ── imports ──▶ src/index.ts (parse → maybe confirm → run)
   ▼
-args.ts:16-32  buildProgram()   ← DECLARE the interface once
-  │  .argument('[listFile]') + 9 × .option(...)
+args.ts:16-33  buildProgram()   ← DECLARE the interface once
+  │  .argument('[listFile]') + 10 × .option(...)
   ▼
-args.ts:37  program.parse(argv)  ← TOKENIZE + COERCE + VALIDATE (commander)
+args.ts:46-60  program.parse(argv)  ← TOKENIZE + COERCE + VALIDATE (commander)
   │  program.args[0]  → positional     program.opts() → flags object
   ▼
-args.ts:49-73  adapt             ← MAP to CliOptions (constants.ts:15-26)
+args.ts:87-100  adapt             ← MAP to CliOptions (constants.ts:15-27)
   │  ?? null normalization, legacy emails.txt fallback
+  ▼
+index.ts  confirm gate (tui.ts)  ← CONFIRM live TTY sends (skipped: --dry-run/--yes/non-TTY)
   ▼
 sender.ts:28  run(opts)          ← EXECUTE (never sees argv)
    ├─ dry-run early return  ·  daily-limit guard  ·  Gmail auth
@@ -37,20 +38,22 @@ sender.ts:28  run(opts)          ← EXECUTE (never sees argv)
 - `src/index.ts:6` is the whole program: parse, then run. No logic lives here,
   so there is exactly one place where CLI meets domain code.
 
-### 2. Declare — `buildProgram()` (`args.ts:16-32`)
+### 2. Declare — `buildProgram()` (`args.ts:16-33`)
 
 | Declaration                         | Meaning                                                          |
 | ----------------------------------- | ---------------------------------------------------------------- |
 | `.argument('[listFile]', …, D)`     | optional positional (`[]` = optional); default `D` when omitted  |
 | `.option('--dry-run', …)`           | boolean flag, default `undefined` → adapted to `false`           |
+| `.option('--yes', …)`               | boolean flag: skip interactive confirmation (scripts/CI)         |
 | `.option('--limit <n>', …, parser)` | value option (`<n>` = value required); 3rd arg coerces/validates |
 | `.option('--config <path>', …, D)`  | value option with a default                                      |
 
-Nine options total: `--dry-run --limit --subject --from --resume --body-file
---delay-ms --daily-limit --config`. Adding a tenth = one `.option()` line +
+Ten options total: `--dry-run --yes --non-interactive --quiet --json --limit
+--subject --from --resume --body-file --delay-ms --daily-limit --config`.
+Adding another = one `.option()` line +
 a `CliOptions` field (checklist in [Development](./development.md)).
 
-### 3. Tokenize — `program.parse(argv)` (`args.ts:37`)
+### 3. Tokenize — `program.parse(argv)` (`args.ts:46-60`)
 
 Commander strips `['node', 'send']`, then accepts all three spellings
 interchangeably: `--limit 5`, `--limit=5`, `--dry-run`. Results split into:
@@ -60,7 +63,9 @@ interchangeably: `--limit 5`, `--limit=5`, `--dry-run`. Results split into:
 
 Free behavior we previously hand-coded: `--help`/`-h` rendering, unknown-flag
 rejection (`Unknown option '--bogus'`), and missing-value errors — each exits
-with usage text, no custom code.
+with usage text, no custom code. Parsing runs under `exitOverride()`, so the
+excess-arguments case can print the `Did you forget quotes?` hint before
+exiting with commander's original code.
 
 ### 4. Coerce / validate — `parsePositiveInt` (`args.ts:6-14`)
 
@@ -71,10 +76,10 @@ usage (exit 1). Key property: it **throws instead of `process.exit`**, so
 validation is unit-testable — the old hand-rolled parser exited inline and
 could not be tested without killing the runner.
 
-### 5. Adapt — argv shapes become `CliOptions` (`args.ts:49-73`)
+### 5. Adapt — argv shapes become `CliOptions` (`args.ts:87-100`)
 
 Raw commander output is reshaped into our stable contract
-(`constants.ts:15-26`):
+(`constants.ts:15-27`):
 
 - every unset value becomes `null` (not `undefined`), so `sender.ts` can use
   the `opts.x ?? config.x ?? DEFAULTS.x` fallback chain;
@@ -106,6 +111,7 @@ After stages 3–5, `run()` receives exactly:
 {
   "listFile": "<APP_ROOT>/data/emails.txt",
   "dryRun": true,
+  "yes": false,
   "limit": 5,
   "subject": "Hi",
   "from": null,
@@ -120,6 +126,26 @@ After stages 3–5, `run()` receives exactly:
 `null` fields resolve from `config.json` inside `run()`; nothing downstream
 knows commander exists.
 
+## Confirm gate — `index.ts` + `tui.ts`
+
+Between adapt and execute sits one branch:
+
+```ts
+if (shouldPrompt(opts, process.stdin.isTTY)) {
+  const ok = await confirmSend(opts.listFile, opts.subject ?? '(from config.json)');
+  if (!ok) process.exit(0);
+}
+```
+
+- `shouldPrompt` (`tui.ts`) is pure: true only for live sends (`!dryRun`),
+  without `--yes`, on a TTY. Scripts, CI, and pipes skip it by construction.
+- `confirmSend` previews the first 5 addresses + subject + list path via clack,
+  returns the answer. Decline → exit 0, nothing sent or logged.
+- Unreadable list → returns true without asking, so `sender.ts` reports the
+  authoritative error (one owner per error).
+- The prompter is injected (`ConfirmPrompter` interface, clack by default),
+  so `test/tui.test.ts` drives accept/decline/unreadable paths with fakes.
+
 ## Test hooks
 
 - `test/args.test.ts:14-29` — `parseArgs()` with fake argv arrays (space and
@@ -133,7 +159,9 @@ knows commander exists.
 | Symptom                            | Raised in                        | User sees                                          | Exit             |
 | ---------------------------------- | -------------------------------- | -------------------------------------------------- | ---------------- |
 | `--bogus`, missing value, `--help` | commander (`parse`)              | usage + error/help                                 | 0 help / 1 error |
+| unquoted multi-word value          | commander + hint (`args.ts`)     | `too many arguments` + `Did you forget quotes?`    | 1                |
 | `--limit abc`                      | `parsePositiveInt` via commander | `option '--limit <n>' argument … is invalid`       | 1                |
+| user declines confirm              | `tui.ts` via `index.ts`          | `Aborted — nothing sent.`                          | 0                |
 | bad `config.json` JSON             | `config.ts`                      | `Failed to load config …`                          | 1                |
 | unreadable list / zero addresses   | `sender.ts`                      | `Cannot read list file …` / `No email addresses …` | 2                |
 | daily quota hit                    | `sender.ts`                      | `Daily limit reached …`                            | 3                |

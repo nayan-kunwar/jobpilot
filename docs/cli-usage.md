@@ -13,15 +13,30 @@ npm run auth    # one-time Gmail login (see Gmail setup)
 
 Default list = `apps/cli/data/emails.txt` (falls back to legacy `apps/cli/emails.txt`).
 
+## Interactive confirmation
+
+Live sends from a human terminal show a preview (first 5 addresses + subject +
+list path) and ask `Send to N address(es)?` before anything goes out. Declining
+aborts with `Aborted — nothing sent` (exit 0, nothing sent, nothing logged).
+Prompting is skipped automatically for `--dry-run`, `--yes`, and non-TTY
+(pipes/CI) — automation never hangs waiting for input.
+
 ## Passing flags
 
-Everything after `--` goes to the CLI:
+Everything after `--` goes to the CLI. Two cwd rules that bite:
+
+- **Multi-word values don't survive Nx forwarding** (`--subject "a b c"` arrives
+  split). Put multi-word text in `config.json` instead — CLI flags are for
+  single-token overrides (`--limit 5`, `--dry-run`).
+- **Nx executes with cwd = `apps/cli/`**, so relative paths are project-relative:
+  `--body-file cover.txt` (not `apps/cli/cover.txt`), `--resume assets/resume.pdf`.
+  Only `cd apps/cli && npx tsx …` direct runs use the same cwd by coincidence —
+  the rule is really "paths are relative to `apps/cli/` either way".
 
 ```
 npm run dry -- --limit 5
-npm run dry -- --subject "Application For Backend Developer" --limit 50
-npm run send -- apps/cli/data/other.txt --dry-run
-npm run send -- --resume ./my-resume.pdf --body-file ./cover.txt --dry-run
+npm run send -- data/other.txt --dry-run
+npm run send -- --resume assets/resume-v2.pdf --body-file cover.txt --dry-run
 ```
 
 Raw Nx equivalents (identical behavior):
@@ -49,6 +64,10 @@ gmail-bulk-sender [options] [listFile]
 | -------------------- | -------------------------------------------------------------------------------- | ----------------------------------- |
 | `[listFile]`         | address list file (any format — emails are regex-extracted, lowercased, deduped) | `apps/cli/data/emails.txt`          |
 | `--dry-run`          | print effective config + addresses, send nothing, skip Gmail auth                | off                                 |
+| `--yes`              | skip interactive confirmation (for scripts/CI; implied by non-TTY)               | off                                 |
+| `--non-interactive`  | same as `--yes`                                                                  | off                                 |
+| `--quiet`            | errors and final summary only (no per-address lines)                             | off                                 |
+| `--json`             | machine-readable JSON summary on stdout (implies `--quiet`)                      | off                                 |
 | `--limit <n>`        | send to at most N addresses this run                                             | all                                 |
 | `--subject <text>`   | override email subject                                                           | `config.json` → builtin             |
 | `--from <text>`      | override `From:` header                                                          | `config.json` → builtin             |

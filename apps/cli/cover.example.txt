@@ -1,0 +1,19 @@
+Dear Hiring Team,
+
+I am writing to apply for the [Role] position at your organization.
+
+I have [X years] of hands-on experience building [what you build, e.g. secure
+and scalable backend systems] using [your stack, e.g. Node.js, TypeScript,
+PostgreSQL, Redis, Docker].
+
+I've attached my resume for your review. I would appreciate the opportunity to
+discuss the role.
+
+Thank you for your time and consideration. I look forward to hearing from you.
+
+Best regards,
+
+Your Name
++91-XXXXXXXXXX
+LinkedIn: https://www.linkedin.com/in/your-handle/
+GitHub: https://github.com/your-handle

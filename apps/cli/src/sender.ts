@@ -26,6 +26,11 @@ function resolveFrom(baseDir: string, p: string): string {
 }
 
 export async function run(opts: CliOptions): Promise<void> {
+  // --json implies --quiet: machine output only (errors on stderr, summary on stdout)
+  const terse = opts.quiet || opts.json;
+  const say = (...parts: unknown[]): void => {
+    if (!terse) console.log(...parts);
+  };
   const configPathAbs = path.isAbsolute(opts.configPath)
     ? opts.configPath
     : path.join(process.cwd(), opts.configPath);
@@ -82,18 +87,26 @@ export async function run(opts: CliOptions): Promise<void> {
     } catch {
       console.error(`Warning: resume file "${RESUME}" not found (would fail on real send).`);
     }
-    console.log(
+    say(
       `From: ${FROM}\nSubject: ${SUBJECT}\nResume: ${RESUME}\nDelay: ${DELAY_MS}ms (+jitter)\nDaily limit: ${DAILY_LIMIT}`,
     );
-    emails.forEach((to, i) => console.log(`[dry-run] ${i + 1}/${emails.length} ${to}`));
-    console.log(`Done: ${emails.length} addresses (dry run, nothing sent)`);
+    emails.forEach((to, i) => say(`[dry-run] ${i + 1}/${emails.length} ${to}`));
+    if (opts.json) {
+      console.log(
+        JSON.stringify({ dryRun: true, total: emails.length, subject: SUBJECT, listFile: opts.listFile }),
+      );
+    } else {
+      say(`Done: ${emails.length} addresses (dry run, nothing sent)`);
+    }
     return;
   }
 
   // --- daily-limit guard (real send only; counts new + legacy log) ---
   const sentToday = await countSentToday(LOG_PATH, LEGACY_LOG_PATH);
   if (sentToday >= DAILY_LIMIT) {
-    console.error(`Daily limit reached: ${sentToday}/${DAILY_LIMIT} already sent today. Aborting. See ${LOG_PATH}.`);
+    console.error(
+      `Daily limit reached: ${sentToday}/${DAILY_LIMIT} already sent today. Aborting. See ${LOG_PATH}.`,
+    );
     process.exit(3);
   }
   const remaining = DAILY_LIMIT - sentToday;
@@ -104,12 +117,14 @@ export async function run(opts: CliOptions): Promise<void> {
     emails = emails.slice(0, remaining);
   }
 
-  // --- auth (with clear errors; absolute app-root defaults so Nx cwd doesn't matter) ---
+  // --- auth (env vars win for CI; files for local use) ---
   let gmail;
   try {
     gmail = await createGmailClient({
       credentialsPath: path.join(APP_ROOT, 'credentials.json'),
       tokenPath: path.join(APP_ROOT, 'token.json'),
+      credentialsJson: process.env.GMAIL_CREDENTIALS_JSON,
+      tokenJson: process.env.GMAIL_TOKEN_JSON,
     });
   } catch (err) {
     console.error(`Auth failed: ${errMessage(err)}`);
@@ -122,7 +137,9 @@ export async function run(opts: CliOptions): Promise<void> {
   try {
     const buf = await fs.readFile(RESUME);
     if (buf.length > MAX_ATTACHMENT_BYTES) {
-      console.error(`Resume "${RESUME}" is ${(buf.length / 1024 / 1024).toFixed(1)}MB, over Gmail's 25MB limit.`);
+      console.error(
+        `Resume "${RESUME}" is ${(buf.length / 1024 / 1024).toFixed(1)}MB, over Gmail's 25MB limit.`,
+      );
       process.exit(2);
     }
     pdf = buf.toString('base64').replace(/.{76}/g, '$&\r\n');
@@ -134,6 +151,7 @@ export async function run(opts: CliOptions): Promise<void> {
 
   // --- send loop with retry + jittered delay ---
   const log: string[] = [];
+  let sentCount = 0;
   for (const [i, to] of emails.entries()) {
     let sent = false;
     let lastErr: unknown = null;
@@ -143,9 +161,10 @@ export async function run(opts: CliOptions): Promise<void> {
           buildMime({ to, from: FROM, subject: SUBJECT, body: BODY, pdfBase64: pdf, fileName }),
         ).toString('base64url');
         const res = await gmail.users.messages.send({ userId: 'me', requestBody: { raw } });
-        console.log(`✔ ${i + 1}/${emails.length} ${to} (${res.data.id})`);
+        say(`✔ ${i + 1}/${emails.length} ${to} (${res.data.id})`);
         log.push([new Date().toISOString(), to, 'sent', res.data.id].map(csvEscape).join(','));
         sent = true;
+        sentCount++;
         break;
       } catch (err) {
         lastErr = err;
@@ -160,12 +179,28 @@ export async function run(opts: CliOptions): Promise<void> {
     }
     if (!sent) {
       console.error(`✘ ${to}: ${errMessage(lastErr)}`);
-      log.push([new Date().toISOString(), to, 'failed', errMessage(lastErr) || 'unknown error'].map(csvEscape).join(','));
+      log.push(
+        [new Date().toISOString(), to, 'failed', errMessage(lastErr) || 'unknown error']
+          .map(csvEscape)
+          .join(','),
+      );
     }
     // jittered inter-email pause so Gmail doesn't flag you
     if (i < emails.length - 1) await sleep(DELAY_MS + Math.floor(Math.random() * 2000));
   }
 
   await appendLog(LOG_PATH, log);
-  console.log(`Done: ${emails.length} addresses`);
+  if (opts.json) {
+    console.log(
+      JSON.stringify({
+        dryRun: false,
+        total: emails.length,
+        sent: sentCount,
+        failed: emails.length - sentCount,
+        logPath: LOG_PATH,
+      }),
+    );
+  } else {
+    console.log(`Done: ${emails.length} addresses`);
+  }
 }

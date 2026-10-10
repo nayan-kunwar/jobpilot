@@ -15,6 +15,9 @@ export interface AppConfig {
 export interface CliOptions {
   listFile: string;
   dryRun: boolean;
+  yes: boolean;
+  quiet: boolean;
+  json: boolean;
   limit: number | null;
   subject: string | null;
   from: string | null;
