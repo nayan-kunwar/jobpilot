@@ -28,11 +28,17 @@ gmail-bulk-sender [options] [listFile]
 
   listFile              address list (default: data/emails.txt)
   --dry-run             list what would be sent without sending
+  --yes                 skip confirmation prompts (scripts/CI)
+  --non-interactive     same as --yes
+  --interactive         ask even without a TTY (aborts if no keyboard)
+  --quiet               errors and final summary only
+  --json                JSON summary on stdout (implies --quiet)
   --limit <n>           cap this run to N addresses
   --subject <text>      override subject      --from <text>  override From
-  --resume <path>       override resume PDF   --body-file <path>  body from file
+  --resume <path>       override resume PDF   --body-file <path>  body file (**bold** ok)
   --delay-ms <n>        delay between emails  --daily-limit <n>  daily cap
   --config <path>       config file (default: config.json)
+  -h, --help            full help
 ```
 
 CLI flags override `config.json` (example: `config/default.json`).
@@ -46,4 +52,8 @@ nx run @apps/cli:check    # tsc --noEmit
 nx run @apps/cli:build    # tsc → dist/
 ```
 
-Layout: `src/` (sender/args/config/gmail/mime/logger/utils/constants/auth), `bin/send.ts` entry, `data/` lists, `assets/` resume, `logs/` audit CSV, `test/` suites.
+Direct scripts (inside `apps/cli/`): `npm test`, `npm run lint|check|build|format`,
+and `npm run dev -- <flags>` to run the CLI without Nx (`npm run dev -- --dry-run`;
+accepts the same flags as `bin/send.ts`).
+
+Layout: `src/` (sender/args/config/gmail/mime/body/logger/utils/constants/auth), `bin/send.ts` entry, `data/` lists, `assets/` resume, `logs/` audit CSV, `test/` suites.

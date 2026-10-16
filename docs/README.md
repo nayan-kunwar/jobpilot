@@ -6,6 +6,7 @@ Usage and contributor documentation for the **job-apps** monorepo.
 
 | Goal                                           | Start here                                    |
 | ---------------------------------------------- | --------------------------------------------- |
+| **See every command on one page**              | [**Cheat sheet**](./cheatsheet.md)            |
 | Send my first batch of emails                  | [Getting started](./getting-started.md)       |
 | Set up Google Cloud + Gmail login (first time) | [Gmail setup](./gmail-setup.md)               |
 | Learn every command and flag                   | [CLI usage](./cli-usage.md)                   |

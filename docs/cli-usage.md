@@ -81,7 +81,7 @@ gmail-bulk-sender [options] [listFile]
 | `--subject <text>`   | override email subject                                                           | `config.json` → builtin             |
 | `--from <text>`      | override `From:` header                                                          | `config.json` → builtin             |
 | `--resume <path>`    | override resume PDF (must be < 25 MB)                                            | `config.json` → `assets/resume.pdf` |
-| `--body-file <path>` | read the email body from a text file                                             | builtin cover letter                |
+| `--body-file <path>` | read the email body from a text file (`**bold**` markers supported)              | builtin cover letter                |
 | `--delay-ms <n>`     | pause between emails (plus up to 2 s random jitter)                              | `5000`                              |
 | `--daily-limit <n>`  | abort/truncate past N sends today                                                | `450`                               |
 | `--config <path>`    | use a different config file                                                      | `apps/cli/config.json`              |
@@ -114,6 +114,24 @@ npm run dry -- --subject "Application For Backend Developer (Node.js)" --limit 5
 npm run send -- --resume ./assets/resume-fullstack.pdf --body-file ./cover-fullstack.txt --subject "Application For Full Stack Developer" --dry-run
 # remove --dry-run only when the preview is right
 ```
+
+**Bold a few words in the cover letter:**
+
+Inside the file passed to `--body-file`, wrap the words in `**double asterisks**`
+— they arrive bold in Gmail, everything else stays plain:
+
+```
+Dear Hiring Team,
+
+I have over **2+ years** of backend experience with **Node.js and TypeScript**.
+
+Best regards,
+Your Name
+```
+
+The message ships as HTML with a plain-text fallback (markers stripped), so
+clients that don't render HTML still read it cleanly. Use it sparingly — heavy
+markup hurts deliverability on bulk sends.
 
 **Slow down for a big list (avoid spam flags):**
 

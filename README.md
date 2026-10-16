@@ -45,6 +45,8 @@ npm run auth
 
 ## Full command reference
 
+One-page summary of every command: [`docs/cheatsheet.md`](./docs/cheatsheet.md).
+
 ```
 npx nx run @apps/cli:dry              # = npm run dry
 npx nx run @apps/cli:send -- --limit 50 --dry-run

@@ -6,17 +6,26 @@ Contributor workflow for the monorepo. User-facing behavior is documented in
 ## Commands (repo root)
 
 ```
-npm install                    # once; hoists all workspaces
-npm run dry                    # fastest sanity check (cli dry-run)
-npx nx run-many -t test        # vitest (cli) — add web tests when UI exists
-npx nx run-many -t lint check  # eslint + tsc --noEmit, every project
-npx nx run @apps/cli:build     # tsc → apps/cli/dist/
-npx nx graph                   # visual project graph
+npm install            # once; hoists all workspaces
+npm run dry            # fastest sanity check (cli dry-run)
+npm test               # vitest (cli) — add web tests when UI exists
+npm run lint           # eslint, every project
+npm run check          # tsc --noEmit, every project
+npm run build          # tsc → apps/cli/dist/
+npm run format         # prettier --write . (whole repo)
+npm run graph          # visual project graph
 ```
 
+Each shortcut maps to an Nx run (`npm test` → `nx run-many -t test`, `npm run dry`
+→ `nx run @apps/cli:dry`; see root `package.json`), so the long forms
+(`npx nx run-many -t test lint check`, `npx nx run @apps/cli:build`) work too.
+
 Per-app: `npx nx run @apps/cli:<target>` / `npx nx run @apps/web:<target>`
-(see `apps/*/project.json` for target lists). Send/auth/dry/live/setup targets are
-never Nx-cached; test/lint/check/build are.
+(see `apps/*/project.json` for target lists), or the app's own scripts from inside
+its directory — `apps/cli` has `npm test`, `npm run lint|check|build|format`, and
+`npm run dev -- <flags>` to run the CLI directly without Nx (e.g.
+`npm run dev -- --dry-run`). Send/auth/dry/live/setup/dev targets are never
+Nx-cached; test/lint/check/build are.
 
 ## CI (`.github/workflows/ci.yml`)
 
@@ -36,8 +45,8 @@ Push/PR runs `npm ci` + `nx run-many -t test lint check build` + `npm run setup`
 - **Commander** owns CLI parsing (`apps/cli/src/args.ts`): add a flag there with
   a positive-int parser or string option, extend `CliOptions` in `constants.ts`,
   consume it in `sender.ts`, cover it in `test/args.test.ts`.
-- **Pure logic stays testable**: `parseEmails`, `buildMime`, `csvEscape`,
-  `isRetryable` have no I/O — keep it that way. `sender.ts:run(opts)` takes a
+- **Pure logic stays testable**: `parseEmails`, `buildMime`, `renderBody`,
+  `csvEscape`, `isRetryable` have no I/O — keep it that way. `sender.ts:run(opts)` takes a
   parsed options object (not `argv`) for the same reason.
 - **No `any`**: type Gmail errors via the `unknown` + guard pattern in `utils.ts`;
   use the `errMessage()` helper instead of `err.message` casts.

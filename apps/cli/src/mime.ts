@@ -1,4 +1,5 @@
 import crypto from 'node:crypto';
+import { renderBody } from './body.js';
 
 export interface MimeParts {
   to: string;
@@ -10,9 +11,11 @@ export interface MimeParts {
 }
 
 export function buildMime({ to, from, subject, body, pdfBase64, fileName }: MimeParts): string {
-  const boundary = 'boundary_' + crypto.randomBytes(16).toString('hex');
+  const mixedBoundary = 'boundary_' + crypto.randomBytes(16).toString('hex');
+  const altBoundary = 'boundary_' + crypto.randomBytes(16).toString('hex');
   const messageId = `<${crypto.randomBytes(16).toString('hex')}@bulk-sender>`;
   const date = new Date().toUTCString();
+  const { text, html } = renderBody(body);
   return [
     `From: ${from}`,
     `To: ${to}`,
@@ -20,21 +23,32 @@ export function buildMime({ to, from, subject, body, pdfBase64, fileName }: Mime
     `Message-ID: ${messageId}`,
     `Date: ${date}`,
     'MIME-Version: 1.0',
-    `Content-Type: multipart/mixed; boundary="${boundary}"`,
+    `Content-Type: multipart/mixed; boundary="${mixedBoundary}"`,
     '',
-    `--${boundary}`,
+    `--${mixedBoundary}`,
+    `Content-Type: multipart/alternative; boundary="${altBoundary}"`,
+    '',
+    `--${altBoundary}`,
     'Content-Type: text/plain; charset="UTF-8"',
     'Content-Transfer-Encoding: 7bit',
     '',
-    body,
+    text,
     '',
-    `--${boundary}`,
+    `--${altBoundary}`,
+    'Content-Type: text/html; charset="UTF-8"',
+    'Content-Transfer-Encoding: 7bit',
+    '',
+    html,
+    '',
+    `--${altBoundary}--`,
+    '',
+    `--${mixedBoundary}`,
     `Content-Type: application/pdf; name="${fileName}"`,
     `Content-Disposition: attachment; filename="${fileName}"`,
     'Content-Transfer-Encoding: base64',
     '',
     pdfBase64,
     '',
-    `--${boundary}--`,
+    `--${mixedBoundary}--`,
   ].join('\r\n');
 }

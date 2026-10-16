@@ -20,7 +20,7 @@
   plus `project.json` targets delegating via `nx:run-script` — one source of truth,
   Nx adds caching + orchestration.
 - Cached: `test`, `lint`, `check`, `build`. **Never cached**: `dry`, `live`,
-  `send`, `auth`, `dev` (they send mail / open browsers / start servers).
+  `send`, `auth`, `setup`, `dev` (they send mail / open browsers / start servers).
 - Root shortcuts (`npm run dry` → `nx run @apps/cli:dry`) exist so daily use
   never needs the long form. Extra args pass through after `--`.
 

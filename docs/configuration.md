@@ -27,6 +27,12 @@ The email **body** is not in `config.json` — it is a builtin template in
 `apps/cli/src/constants.ts` (`DEFAULT_BODY`), overridden per-run with
 `--body-file <path>` (plain-text file; empty file = error).
 
+Wrap words you want **bold** in `**double asterisks**`. The mail is sent as
+`multipart/alternative` (an HTML part with `<b>` plus a plain-text fallback with
+the markers stripped), so Gmail renders the bold text while older clients still
+read cleanly. Keep it to a few phrases — heavy HTML hurts deliverability on bulk
+sends.
+
 ## Precedence
 
 **CLI flag > `config.json` (or `--config` file) > builtin defaults.**
