@@ -16,6 +16,7 @@ apps/cli/sent_log.csv
 sent_log.csv
 apps/cli/emails.txt
 apps/cli/data/emails.txt
+apps/cli/data/body.txt
 emails.txt
 !apps/cli/data/emails.example.txt
 

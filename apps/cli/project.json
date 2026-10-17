@@ -3,6 +3,7 @@
   "name": "@apps/cli",
   "sourceRoot": "apps/cli/src",
   "projectType": "application",
+  "implicitDependencies": ["@packages/email-core"],
   "targets": {
     "dry": { "executor": "nx:run-script", "options": { "script": "dry" } },
     "live": { "executor": "nx:run-script", "options": { "script": "live" } },

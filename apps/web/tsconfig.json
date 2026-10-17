@@ -1,16 +1,34 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
+    // Next.js overrides (base config targets Node libraries with NodeNext)
+    "lib": ["DOM", "DOM.Iterable", "ES2023"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
     "jsx": "preserve",
+    "allowJs": true,
     "noEmit": true,
+    "declaration": false,
+    "declarationMap": false,
+    "sourceMap": false,
+    "incremental": true,
     "plugins": [
       {
         "name": "next"
       }
-    ],
-    "allowJs": true,
-    "incremental": true
+    ]
   },
-  "include": ["./app/**/*.ts", "./app/**/*.tsx", "./next-env.d.ts", "./.next/types/**/*.ts"],
+  "include": [
+    "./app/**/*.ts",
+    "./app/**/*.tsx",
+    "./components/**/*.ts",
+    "./components/**/*.tsx",
+    "./lib/**/*.ts",
+    "./test/**/*.ts",
+    "./test/**/*.tsx",
+    "./vitest.config.ts",
+    "./next-env.d.ts",
+    ".next/types/**/*.ts"
+  ],
   "exclude": ["./node_modules", "./.next"]
 }

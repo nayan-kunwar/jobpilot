@@ -111,13 +111,32 @@ use `npm run send` or pass `--yes`.
 | `3`  | daily limit already reached                                                          |
 | `4`  | Gmail auth failure → `npm run auth`                                                  |
 
+## Web dashboard (optional)
+
+```bash
+npx nx run @apps/web:dev     # http://localhost:3000 — dashboard + compose, hot reload
+npx nx run @apps/web:build   # production build (→ apps/web/.next/)
+npx nx run @apps/web:start   # serve the production build
+npx nx run @apps/web:test    # web tests (vitest + jsdom)
+```
+
+Compose → **Save** writes the same files the CLI reads (`config.json`,
+`data/body.txt`, `data/emails.txt`), then send as usual:
+
+```bash
+npm run dry  -- --body-file data/body.txt    # verify first
+npm run live -- --body-file data/body.txt    # real send
+```
+
+Sending stays in the CLI. Details: [Web](./web.md).
+
 ## Dev commands (repo root)
 
 ```bash
 npm test           # vitest (all projects)
 npm run lint       # eslint, every project
 npm run check      # tsc --noEmit, every project
-npm run build      # tsc → apps/cli/dist/
+npm run build      # build every project (tsc + next build)
 npm run format     # prettier --write .
 npm run graph      # Nx project graph
 ```
@@ -127,9 +146,10 @@ inside `apps/cli/`).
 
 ## Where things live
 
-| What         | Path                                              |
-| ------------ | ------------------------------------------------- |
-| Address list | `apps/cli/data/emails.txt`                        |
-| Resume       | `apps/cli/assets/` (set the exact file in config) |
-| Send log     | `apps/cli/logs/sent_log.csv`                      |
-| Gmail token  | `apps/cli/token.json` (expired → `npm run auth`)  |
+| What               | Path                                              |
+| ------------------ | ------------------------------------------------- |
+| Address list       | `apps/cli/data/emails.txt`                        |
+| Saved letter (web) | `apps/cli/data/body.txt` (Compose → Save)         |
+| Resume             | `apps/cli/assets/` (set the exact file in config) |
+| Send log           | `apps/cli/logs/sent_log.csv`                      |
+| Gmail token        | `apps/cli/token.json` (expired → `npm run auth`)  |

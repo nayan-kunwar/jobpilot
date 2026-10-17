@@ -1,15 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildProgram, excessArgumentsHint, parseArgs, parseEmails } from '../src/args.js';
-
-describe('parseEmails', () => {
-  it('extracts and dedupes (case-insensitive)', () => {
-    expect(parseEmails('A@x.com, a@X.com; Jane <jane@co.com>\nnope')).toEqual(['A@x.com', 'jane@co.com']);
-  });
-
-  it('returns [] for no addresses', () => {
-    expect(parseEmails('hello world')).toEqual([]);
-  });
-});
+import { buildProgram, excessArgumentsHint, parseArgs } from '../src/args.js';
 
 describe('parseArgs', () => {
   it('parses list + flags (space and = forms)', async () => {

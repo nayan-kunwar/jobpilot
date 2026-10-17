@@ -2,7 +2,7 @@
   "name": "@apps/web",
   "version": "0.1.0",
   "private": true,
-  "description": "Web app (Next.js) — empty scaffold, UI comes later",
+  "description": "Local dashboard for the Gmail bulk sender (Next.js)",
   "license": "MIT",
   "type": "module",
   "engines": {
@@ -12,15 +12,27 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "test": "vitest run",
     "lint": "eslint .",
     "check": "tsc --noEmit -p tsconfig.json"
   },
   "dependencies": {
+    "@packages/email-core": "*",
     "next": "^15.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
-    "@types/react": "19.3.0"
+    "@tailwindcss/postcss": "^4.1.0",
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/jest-dom": "^6.6.0",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.0",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "^19.0.0",
+    "jsdom": "^26.0.0",
+    "postcss": "^8.5.0",
+    "tailwindcss": "^4.1.0",
+    "vitest": "^3.0.0"
   }
 }

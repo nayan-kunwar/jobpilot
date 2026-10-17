@@ -1,0 +1,17 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "name": "@packages/email-core",
+  "sourceRoot": "packages/email-core/src",
+  "projectType": "library",
+  "targets": {
+    "test": { "executor": "nx:run-script", "options": { "script": "test" }, "cache": true },
+    "lint": { "executor": "nx:run-script", "options": { "script": "lint" }, "cache": true },
+    "check": { "executor": "nx:run-script", "options": { "script": "check" }, "cache": true },
+    "build": {
+      "executor": "nx:run-script",
+      "options": { "script": "build" },
+      "cache": true,
+      "outputs": ["{projectRoot}/dist"]
+    }
+  }
+}

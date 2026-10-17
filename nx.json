@@ -15,7 +15,12 @@
   },
   "namedInputs": {
     "default": ["{projectRoot}/**/*", "sharedGlobals"],
-    "sharedGlobals": ["{workspaceRoot}/tsconfig.base.json", "{workspaceRoot}/eslint.config.js"]
+    "sharedGlobals": [
+      "{workspaceRoot}/tsconfig.base.json",
+      "{workspaceRoot}/eslint.config.js",
+      "{workspaceRoot}/packages/*/src/**/*",
+      "{workspaceRoot}/packages/*/package.json"
+    ]
   },
   "plugins": []
 }

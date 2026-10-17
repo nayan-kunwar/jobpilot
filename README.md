@@ -7,7 +7,7 @@ Nx + TypeScript monorepo (npm workspaces) for job-application tooling.
 | App                      | Package     | Description                                                                                            |
 | ------------------------ | ----------- | ------------------------------------------------------------------------------------------------------ |
 | [`apps/cli`](./apps/cli) | `@apps/cli` | Gmail bulk sender — personalized job-application emails + PDF resume via the Gmail API (commander CLI) |
-| [`apps/web`](./apps/web) | `@apps/web` | Next.js web app — empty scaffold, UI comes later                                                       |
+| [`apps/web`](./apps/web) | `@apps/web` | Local Next.js dashboard — compose with live `**bold**` preview; sending stays in the CLI               |
 
 Shared code goes in [`packages/`](./packages) when 2+ apps need it.
 
@@ -43,6 +43,12 @@ One-time Gmail login for the CLI (creates `apps/cli/token.json`):
 npm run auth
 ```
 
+**Web dashboard (optional):**
+
+```
+npx nx run @apps/web:dev   # http://localhost:3000 — compose + live preview; sending stays in the CLI
+```
+
 ## Full command reference
 
 One-page summary of every command: [`docs/cheatsheet.md`](./docs/cheatsheet.md).
@@ -66,16 +72,18 @@ npx nx graph                          # project graph
   eslint.config.js / .prettierrc / .editorconfig
   apps/
     cli/                   # @apps/cli — the Gmail bulk sender
-      src/                 # index/sender/args/config/gmail/mime/logger/utils/constants/auth (.ts)
+      src/                 # args/config/gmail/sender/tui/auth, logger, constants
       bin/send.ts          # executable entry
       config/default.json  # tracked example config
       config.json          # local config (resume/subject/delay/dailyLimit)
       data/emails.txt      # address list (gitignored; .example.txt is tracked)
+      data/body.txt        # letter saved from the web Compose page (gitignored)
       assets/resume.pdf    # resume (gitignored)
       logs/sent_log.csv    # append-only send log (gitignored)
       test/                # vitest suites
-    web/                   # @apps/web — empty Next.js scaffold
-  packages/                # shared libs (future)
+    web/                   # @apps/web — local dashboard (Next.js + Tailwind)
+  packages/
+    email-core/            # @packages/email-core — mail logic shared by CLI + web
 ```
 
 ## Gmail setup (CLI)

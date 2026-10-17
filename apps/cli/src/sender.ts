@@ -2,6 +2,13 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import {
   DEFAULT_BODY,
+  buildMime,
+  countSentToday,
+  csvEscape,
+  isRetryable,
+  parseEmails,
+} from '@packages/email-core';
+import {
   LEGACY_LOG_PATH,
   LOG_PATH,
   MAX_ATTACHMENT_BYTES,
@@ -10,11 +17,9 @@ import {
   type CliOptions,
 } from './constants.js';
 import { loadConfig } from './config.js';
-import { parseEmails } from './args.js';
 import { createGmailClient } from './gmail.js';
-import { buildMime } from './mime.js';
 import { appendLog } from './logger.js';
-import { countSentToday, csvEscape, isRetryable, sleep } from './utils.js';
+import { sleep } from './utils.js';
 
 function errMessage(err: unknown): string {
   return err instanceof Error ? err.message : String(err);

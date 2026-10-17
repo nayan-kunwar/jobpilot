@@ -3,6 +3,7 @@
   "name": "@apps/web",
   "sourceRoot": "apps/web",
   "projectType": "application",
+  "implicitDependencies": ["@packages/email-core"],
   "targets": {
     "dev": { "executor": "nx:run-script", "options": { "script": "dev" } },
     "build": {
@@ -12,6 +13,7 @@
       "outputs": ["{projectRoot}/.next"]
     },
     "start": { "executor": "nx:run-script", "options": { "script": "start" } },
+    "test": { "executor": "nx:run-script", "options": { "script": "test" }, "cache": true },
     "lint": { "executor": "nx:run-script", "options": { "script": "lint" }, "cache": true },
     "check": { "executor": "nx:run-script", "options": { "script": "check" }, "cache": true }
   }

@@ -1,0 +1,45 @@
+{
+  "name": "@packages/email-core",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Shared mail logic for the CLI and web apps: address parsing, bold body rendering, MIME builder, log utils",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./body": {
+      "types": "./dist/body.d.ts",
+      "default": "./dist/body.js"
+    },
+    "./defaults": {
+      "types": "./dist/defaults.d.ts",
+      "default": "./dist/defaults.js"
+    },
+    "./emails": {
+      "types": "./dist/emails.d.ts",
+      "default": "./dist/emails.js"
+    },
+    "./mime": {
+      "types": "./dist/mime.d.ts",
+      "default": "./dist/mime.js"
+    },
+    "./utils": {
+      "types": "./dist/utils.d.ts",
+      "default": "./dist/utils.js"
+    }
+  },
+  "scripts": {
+    "test": "vitest run",
+    "lint": "eslint .",
+    "check": "tsc --noEmit -p tsconfig.json",
+    "build": "tsc -p tsconfig.lib.json"
+  }
+}

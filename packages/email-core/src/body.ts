@@ -7,6 +7,7 @@
  *   become paragraphs and single newlines become `<br>`.
  *
  * Markers must open and close on the same line; a lone `**` stays literal.
+ * Pure module — safe to import from client components.
  */
 
 const BOLD = /\*\*(.+?)\*\*/g;

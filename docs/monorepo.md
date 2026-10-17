@@ -6,10 +6,10 @@
 .
   package.json            # private root, workspaces ["apps/*","packages/*"], shortcuts (dry/live/send/auth/test/lint/...)
   nx.json                 # task pipeline + cache rules
-  tsconfig.base.json      # strict TS, path aliases @apps/*
+  tsconfig.base.json      # strict TS, path aliases @apps/* + @packages/*
   apps/cli/               # @apps/cli — Gmail bulk sender (production)
-  apps/web/               # @apps/web — empty Next.js scaffold
-  packages/               # shared libs (empty; see below)
+  apps/web/               # @apps/web — local dashboard (Next.js + Tailwind)
+  packages/email-core/    # @packages/email-core — mail logic shared by CLI + web
 ```
 
 `npx nx graph` shows the live project graph (`@apps/cli`, `@apps/web`).
@@ -41,13 +41,18 @@
 ## Adding a shared package
 
 Create `packages/<name>/` when **2+ apps** import the same code (rule of thumb —
-don't extract prematurely). Candidates already identified: `email-core`
-(MIME builder, address parsing, retry utils) if the web app ever previews mail.
+don't extract prematurely). `@packages/email-core` is the first one: MIME
+builder, address parsing, `**bold**` renderer, retry/daily-limit utils — used by
+both the CLI and the web dashboard.
 
 1. `packages/<name>/package.json` (`@packages/<name>`, version `0.1.0`),
    `src/index.ts` barrel, `project.json` (`build/test/lint` via `nx:run-script`).
 2. Depend with workspace range: `"@packages/<name>": "*"` in the app.
 3. Add path alias in `tsconfig.base.json` (`@packages/<name>/*`).
+4. The alias points at `src/` so tests, `tsx` and Next run from source; a build
+   that needs real declarations can override to `dist/*.d.ts` (see
+   `apps/cli/tsconfig.lib.json`). Client code should import subpaths
+   (`@packages/email-core/body`) when the barrel pulls in Node-only modules.
 
 ## Caching pitfalls
 

@@ -5,8 +5,13 @@
   "description": "Monorepo: job-application tooling (CLI bulk sender, future web apps)",
   "license": "MIT",
   "type": "module",
-  "engines": { "node": ">=20" },
-  "workspaces": ["apps/*", "packages/*"],
+  "engines": {
+    "node": ">=20"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
     "dry": "nx run @apps/cli:dry",
     "live": "npm run live -w @apps/cli --",

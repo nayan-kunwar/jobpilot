@@ -17,7 +17,9 @@
     "sourceMap": true,
     "paths": {
       "@apps/cli/*": ["./apps/cli/src/*"],
-      "@apps/web/*": ["./apps/web/*"]
+      "@apps/web/*": ["./apps/web/*"],
+      "@packages/email-core": ["./packages/email-core/src/index.ts"],
+      "@packages/email-core/*": ["./packages/email-core/src/*"]
     }
   }
 }

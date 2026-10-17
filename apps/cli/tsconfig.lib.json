@@ -5,7 +5,11 @@
     "rootDir": ".",
     "noEmit": false,
     "declaration": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "paths": {
+      "@packages/email-core": ["../../packages/email-core/dist/index.d.ts"],
+      "@packages/email-core/*": ["../../packages/email-core/dist/*"]
+    }
   },
   "include": ["./src/**/*.ts", "./bin/**/*.ts"]
 }

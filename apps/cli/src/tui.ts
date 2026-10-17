@@ -1,6 +1,6 @@
 import * as p from '@clack/prompts';
 import fs from 'node:fs/promises';
-import { parseEmails } from './args.js';
+import { parseEmails } from '@packages/email-core';
 
 /** Minimal prompter surface so tests can inject fakes (no TTY needed). */
 export interface ConfirmPrompter {
