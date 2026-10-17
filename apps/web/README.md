@@ -12,6 +12,7 @@ npx nx run @apps/web:start    # serve the production build
 npx nx run @apps/web:test     # vitest + jsdom + testing-library
 npx nx run @apps/web:lint     # eslint
 npx nx run @apps/web:check    # tsc --noEmit
+npm start                     # same as @apps/web:start, from the repo root
 ```
 
 Full docs: [`docs/web.md`](../../docs/web.md). Shared mail logic comes from

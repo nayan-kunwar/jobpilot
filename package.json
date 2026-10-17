@@ -22,6 +22,7 @@
     "lint": "nx run-many -t lint",
     "check": "nx run-many -t check",
     "build": "nx run-many -t build",
+    "start": "nx run @apps/web:start",
     "format": "prettier --write .",
     "graph": "nx graph"
   },

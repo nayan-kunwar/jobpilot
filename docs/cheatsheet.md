@@ -118,6 +118,7 @@ npx nx run @apps/web:dev     # http://localhost:3000 — dashboard + compose, ho
 npx nx run @apps/web:build   # production build (→ apps/web/.next/)
 npx nx run @apps/web:start   # serve the production build
 npx nx run @apps/web:test    # web tests (vitest + jsdom)
+npm start                    # same as @apps/web:start, from the repo root
 ```
 
 Compose → **Save** writes the same files the CLI reads (`config.json`,
@@ -130,7 +131,8 @@ npm run live -- --body-file data/body.txt    # real send
 ```
 
 Dev-mode caveat: editing source under `next dev` restarts the server and kills a
-run in progress — use `build` + `start` for real batches. Details: [Web](./web.md).
+run in progress — use `build` + `start` (`npm run build && npm start` from the
+repo root) for real batches. Details: [Web](./web.md).
 
 ## Dev commands (repo root)
 

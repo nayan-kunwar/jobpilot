@@ -15,6 +15,7 @@ npx nx run @apps/web:dev     # dev server, hot reload — http://localhost:3000
 npx nx run @apps/web:build   # production build → apps/web/.next/
 npx nx run @apps/web:start   # serve the production build
 npx nx run @apps/web:test    # vitest + jsdom + testing-library
+npm start                    # same as @apps/web:start, from the repo root
 ```
 
 ## Pages
@@ -45,7 +46,8 @@ Rules and caveats:
 - **One batch at a time** — starting a second returns 409 while one is running.
 - The job lives in the Next server process: editing source files under
   `next dev` restarts the server and **kills a run in progress**. Keep batches
-  short in dev, or use `build` + `start` for real runs.
+  short in dev, or use `build` + `start` (`npm run build && npm start` from the
+  repo root) for real runs.
 - Rows are logged as they are sent, so an interrupted run loses nothing.
 - The daily limit is enforced server-side; if the list exceeds the remaining
   budget, the overflow is marked _skipped (daily limit)_.
