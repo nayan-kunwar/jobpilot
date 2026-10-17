@@ -19,8 +19,8 @@ export default async function ComposePage() {
       <header>
         <h1 className="text-2xl font-bold tracking-tight">Compose</h1>
         <p className="mt-1 text-sm text-slate-500">
-          Edit the letter and the recipient list, check the exact preview, then save — the CLI uses the same
-          files.
+          Edit the letter and the recipient list, check the exact preview, then save or send — the CLI uses
+          the same files.
         </p>
       </header>
       <ComposeClient
@@ -35,6 +35,7 @@ export default async function ComposePage() {
         }}
         resumes={resumes}
         daily={{ sentToday: status.sentToday, dailyLimit: status.dailyLimit }}
+        delayMs={config.delayMs}
         onSave={saveCompose}
       />
     </div>

@@ -121,14 +121,16 @@ npx nx run @apps/web:test    # web tests (vitest + jsdom)
 ```
 
 Compose → **Save** writes the same files the CLI reads (`config.json`,
-`data/body.txt`, `data/emails.txt`), then send as usual:
+`data/body.txt`, `data/emails.txt`) — or press **Send now** to send right from
+the dashboard (one batch at a time, live progress + stop). Still CLI-friendly:
 
 ```bash
 npm run dry  -- --body-file data/body.txt    # verify first
 npm run live -- --body-file data/body.txt    # real send
 ```
 
-Sending stays in the CLI. Details: [Web](./web.md).
+Dev-mode caveat: editing source under `next dev` restarts the server and kills a
+run in progress — use `build` + `start` for real batches. Details: [Web](./web.md).
 
 ## Dev commands (repo root)
 

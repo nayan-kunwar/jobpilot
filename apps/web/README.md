@@ -1,9 +1,9 @@
 # @apps/web
 
-Local Next.js dashboard for the Gmail bulk sender — preview-first: compose and
-verify in the browser, **sending stays in the CLI**. Reads and writes the CLI's
-files (`apps/cli/config.json`, `data/body.txt`, `data/emails.txt`, `assets/`);
-root override: `CLI_DATA_DIR`.
+Local Next.js dashboard for the Gmail bulk sender — compose with live `**bold**`
+preview, then send from the browser (or hand the same files to the CLI). Reads
+and writes the CLI's files (`apps/cli/config.json`, `data/body.txt`,
+`data/emails.txt`, `assets/`); root override: `CLI_DATA_DIR`.
 
 ```bash
 npx nx run @apps/web:dev      # dev server — http://localhost:3000

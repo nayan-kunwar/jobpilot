@@ -42,8 +42,9 @@
 
 Create `packages/<name>/` when **2+ apps** import the same code (rule of thumb —
 don't extract prematurely). `@packages/email-core` is the first one: MIME
-builder, address parsing, `**bold**` renderer, retry/daily-limit utils — used by
-both the CLI and the web dashboard.
+builder, address parsing, `**bold**` renderer, retry/daily-limit utils, and the
+shared send engine (`@packages/email-core/sender`) — used by both the CLI and
+the web dashboard.
 
 1. `packages/<name>/package.json` (`@packages/<name>`, version `0.1.0`),
    `src/index.ts` barrel, `project.json` (`build/test/lint` via `nx:run-script`).

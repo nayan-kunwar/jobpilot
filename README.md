@@ -4,10 +4,10 @@ Nx + TypeScript monorepo (npm workspaces) for job-application tooling.
 
 ## Apps
 
-| App                      | Package     | Description                                                                                            |
-| ------------------------ | ----------- | ------------------------------------------------------------------------------------------------------ |
-| [`apps/cli`](./apps/cli) | `@apps/cli` | Gmail bulk sender — personalized job-application emails + PDF resume via the Gmail API (commander CLI) |
-| [`apps/web`](./apps/web) | `@apps/web` | Local Next.js dashboard — compose with live `**bold**` preview; sending stays in the CLI               |
+| App                      | Package     | Description                                                                                              |
+| ------------------------ | ----------- | -------------------------------------------------------------------------------------------------------- |
+| [`apps/cli`](./apps/cli) | `@apps/cli` | Gmail bulk sender — personalized job-application emails + PDF resume via the Gmail API (commander CLI)   |
+| [`apps/web`](./apps/web) | `@apps/web` | Local Next.js dashboard — compose with live `**bold**` preview, send from the UI (or keep using the CLI) |
 
 Shared code goes in [`packages/`](./packages) when 2+ apps need it.
 
@@ -46,7 +46,7 @@ npm run auth
 **Web dashboard (optional):**
 
 ```
-npx nx run @apps/web:dev   # http://localhost:3000 — compose + live preview; sending stays in the CLI
+npx nx run @apps/web:dev   # http://localhost:3000 — compose, send from the browser, live progress
 ```
 
 ## Full command reference

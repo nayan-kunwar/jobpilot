@@ -20,9 +20,9 @@ Usage and contributor documentation for the **job-apps** monorepo.
 
 ## Repo map (one-liners)
 
-- [`apps/cli`](../apps/cli) (`@apps/cli`) — Gmail bulk sender. Sending, auth and the daily guard live here.
-- [`apps/web`](../apps/web) (`@apps/web`) — local Next.js dashboard: compose with live preview, dashboard stats (sending stays in the CLI).
-- [`packages/email-core`](../packages/email-core) — shared mail logic (MIME, `**bold**` renderer, address parsing, utils).
+- [`apps/cli`](../apps/cli) (`@apps/cli`) — Gmail bulk sender: bin/entry, args/tui/auth, and the daily guard wiring.
+- [`apps/web`](../apps/web) (`@apps/web`) — local Next.js dashboard: compose with live preview, send from the UI with progress + stop, dashboard stats.
+- [`packages/email-core`](../packages/email-core) — shared mail logic (MIME, `**bold**` renderer, address parsing, utils) and the send engine (`/sender`) both apps run.
 
 Root `README.md` is the overview; this folder is the source of truth for details.
 Per-app READMEs keep short quick-refs and link here.

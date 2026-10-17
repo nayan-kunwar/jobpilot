@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { SendBanner } from '../components/SendBanner';
 import { Card, Stat, StatusPill } from '../components/ui';
 import { getStatus, readLog } from '../lib/store';
 
@@ -18,6 +19,8 @@ export default async function DashboardPage() {
           Overview of the local bulk sender — same files the CLI uses.
         </p>
       </header>
+
+      <SendBanner />
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <Stat
@@ -57,7 +60,8 @@ export default async function DashboardPage() {
         }
       >
         <p className="text-sm text-slate-600">
-          Edit the letter and the recipient list in the browser, save, then send with the CLI:
+          Write the letter and paste recipients in Compose, then send right from this dashboard — or keep
+          using the CLI:
         </p>
         <pre className="mt-3 overflow-x-auto rounded-md bg-slate-900 px-4 py-3 text-xs leading-relaxed text-slate-100">
           {`npm run dry  -- --body-file data/body.txt   # verify first\nnpm run live -- --body-file data/body.txt   # real send`}
