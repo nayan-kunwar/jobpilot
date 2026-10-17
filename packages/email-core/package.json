@@ -31,10 +31,17 @@
       "types": "./dist/mime.d.ts",
       "default": "./dist/mime.js"
     },
+    "./sender": {
+      "types": "./dist/sender.d.ts",
+      "default": "./dist/sender.js"
+    },
     "./utils": {
       "types": "./dist/utils.d.ts",
       "default": "./dist/utils.js"
     }
+  },
+  "dependencies": {
+    "googleapis": "^144.0.0"
   },
   "scripts": {
     "test": "vitest run",

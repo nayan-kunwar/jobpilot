@@ -23,3 +23,8 @@ export const DEFAULT_SUBJECT = 'Job Application';
 export const DEFAULT_RESUME_REL = './assets/resume.pdf';
 export const DEFAULT_DELAY_MS = 5000; // pause between emails so Gmail doesn't flag you
 export const DEFAULT_DAILY_LIMIT = 450; // Gmail ~500/day for normal accounts; stay under it
+
+/** Gmail's hard attachment limit (25 MB). */
+export const MAX_ATTACHMENT_BYTES = 25 * 1024 * 1024;
+/** Backoff schedule for retryable send errors (ms) — one wait per retry, 3 retries total. */
+export const RETRY_DELAYS = [2000, 8000, 30000];

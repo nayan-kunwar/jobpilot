@@ -27,7 +27,6 @@
     "@clack/prompts": "^1.8.1",
     "@google-cloud/local-auth": "^3.0.1",
     "@packages/email-core": "*",
-    "commander": "^14.0.0",
-    "googleapis": "^144.0.0"
+    "commander": "^14.0.0"
   }
 }

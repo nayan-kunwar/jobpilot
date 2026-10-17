@@ -1,6 +1,6 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { LOG_HEADER } from './constants.js';
+import { LOG_HEADER } from './utils.js';
 
 /** Append rows to the CSV log, creating parent dirs + header for new/empty files. */
 export async function appendLog(logPath: string, rows: string[]): Promise<void> {

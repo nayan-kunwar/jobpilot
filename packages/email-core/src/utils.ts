@@ -1,5 +1,13 @@
 import fs from 'node:fs/promises';
 
+/** CSV header for the append-only send log. */
+export const LOG_HEADER = 'timestamp,to,status,detail';
+
+/** Promise-based pause (injected in tests to skip real waiting). */
+export function sleep(ms: number): Promise<void> {
+  return new Promise((r) => setTimeout(r, ms));
+}
+
 export function csvEscape(field: unknown): string {
   const s = String(field ?? '');
   return /[",\r\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;

@@ -1,6 +1,6 @@
+import fs from 'node:fs/promises';
 import { google } from 'googleapis';
 import type { gmail_v1 } from 'googleapis';
-import fs from 'node:fs/promises';
 
 function errMessage(err: unknown): string {
   return err instanceof Error ? err.message : String(err);
@@ -18,7 +18,7 @@ interface TokenData {
 
 /**
  * Create an authenticated Gmail client.
- * Default paths are absolute under apps/cli/ so Nx can run from the workspace root.
+ * Callers pass absolute paths (the CLI anchors to apps/cli/, the web to its CLI root).
  * Raw JSON strings (e.g. from GMAIL_CREDENTIALS_JSON / GMAIL_TOKEN_JSON env vars)
  * take precedence over files, so CI can inject secrets without writing them to disk.
  */

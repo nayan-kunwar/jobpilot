@@ -45,6 +45,3 @@ export const DEFAULT_CONFIG_PATH = path.join(APP_ROOT, 'config.json');
 // Canonical log location. Legacy root file is still counted for continuity.
 export const LOG_PATH = path.join(APP_ROOT, 'logs', 'sent_log.csv');
 export const LEGACY_LOG_PATH = path.join(APP_ROOT, 'sent_log.csv');
-export const LOG_HEADER = 'timestamp,to,status,detail';
-export const MAX_ATTACHMENT_BYTES = 25 * 1024 * 1024; // Gmail attachment limit
-export const RETRY_DELAYS = [2000, 8000, 30000];
