@@ -51,6 +51,8 @@ export interface ResolveSendInputsOptions {
   limit?: number | null;
   /** Body file; when absent the builtin body is used. */
   bodyFile?: string | null;
+  /** Inline body text (web compose); takes precedence over bodyFile. */
+  bodyText?: string | null;
   /** Per-field overrides (CLI flags / web form). A resume override resolves against cwd. */
   overrides?: {
     from?: string | null;
@@ -93,7 +95,10 @@ export async function resolveSendInputs(o: ResolveSendInputsOptions): Promise<Re
   if (o.limit != null) emails = emails.slice(0, o.limit);
 
   let body = DEFAULT_BODY;
-  if (o.bodyFile) {
+  if (o.bodyText != null) {
+    body = o.bodyText.trim();
+    if (!body) throw new SendError('Body is empty.', 'body');
+  } else if (o.bodyFile) {
     try {
       body = (await fs.readFile(o.bodyFile, 'utf8')).trim();
     } catch (err) {

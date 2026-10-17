@@ -18,6 +18,10 @@ export default defineConfig({
         replacement: path.resolve(import.meta.dirname, '../../packages/email-core/src/defaults.ts'),
       },
       {
+        find: '@packages/email-core/sender',
+        replacement: path.resolve(import.meta.dirname, '../../packages/email-core/src/sender.ts'),
+      },
+      {
         find: '@packages/email-core',
         replacement: path.resolve(import.meta.dirname, '../../packages/email-core/src/index.ts'),
       },

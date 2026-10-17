@@ -139,6 +139,27 @@ describe('resolveSendInputs', () => {
       resolveSendInputs({ listFile, config: CONFIG, baseDir: dir, bodyFile: path.join(dir, 'missing.txt') }),
     ).rejects.toMatchObject({ kind: 'body' });
   });
+
+  it('prefers inline bodyText over the body file', async () => {
+    const dir = await tmp();
+    const listFile = path.join(dir, 'emails.txt');
+    await fs.writeFile(listFile, 'a@x.com\n');
+    const bodyFile = path.join(dir, 'body.txt');
+    await fs.writeFile(bodyFile, ''); // an empty file would normally be a 'body' error
+
+    const inputs = await resolveSendInputs({
+      listFile,
+      config: CONFIG,
+      baseDir: dir,
+      bodyFile,
+      bodyText: 'Inline **body**',
+    });
+    expect(inputs.body).toBe('Inline **body**');
+
+    await expect(
+      resolveSendInputs({ listFile, config: CONFIG, baseDir: dir, bodyText: '   ' }),
+    ).rejects.toMatchObject({ kind: 'body' });
+  });
 });
 
 describe('runSend', () => {
