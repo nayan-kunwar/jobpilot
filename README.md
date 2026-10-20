@@ -46,7 +46,8 @@ npm run auth
 **Web dashboard (optional):**
 
 ```
-npx nx run @apps/web:dev   # http://localhost:3000 — compose, send from the browser, live progress
+npx nx run @apps/web:dev    # dev server — http://localhost:3000, hot reload
+npm run build && npm start  # production build + serve — use this for real sends
 ```
 
 ## Full command reference
@@ -60,6 +61,7 @@ npx nx run @apps/cli:auth
 npx nx run-many -t test               # all tests
 npx nx run-many -t lint check         # all lints + typechecks
 npx nx run @apps/web:dev              # Next.js dev server
+npm start                             # = @apps/web:start, serve the production build
 npx nx graph                          # project graph
 ```
 
